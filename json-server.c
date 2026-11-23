@@ -69,6 +69,17 @@ int main(int argc, char *argv[]){
       close(server);
       return 1;
    }
+
+   struct sockaddr_in6 binded_addr = {0};
+   socklen_t len = sizeof(binded_addr);
+   ret = getsockname(server, (struct sockaddr *) &binded_addr, &len);
+   if ( ret == -1) {
+      perror("getsockname failed");
+      close(server);
+      return 1;
+   }
+
+   printf("HTTP server is using TCP port %u\nHTTPS server is using TCP port -1\n", ntohs(binded_addr.sin6_port)); 
    
    ret = listen(server, SOMAXCONN);
    if (ret < 0) {
